@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Hubtel.eCommerce.Cart.Api.Models;
+using System;
 
 namespace Hubtel.eCommerce.Cart.Api.Controllers
 {
@@ -77,8 +78,17 @@ namespace Hubtel.eCommerce.Cart.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<CartItem>> PostCartItem(CartItem cartItem)
         {
-            _context.CartItems.Add(cartItem);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.CartItems.Add(cartItem);
+                await _context.SaveChangesAsync();
+            }
+            catch(ArgumentException)
+            {
+                _context.Entry(cartItem).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+            }
 
             return CreatedAtAction(nameof(GetCartItem), new { id = cartItem.ItemID }, cartItem);
         }
