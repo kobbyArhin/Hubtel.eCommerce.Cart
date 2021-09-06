@@ -86,8 +86,7 @@ namespace Hubtel.eCommerce.Cart.Api.Controllers
             catch(ArgumentException)
             {
                 _context.Entry(cartItem).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
+                await _context.SaveChangesAsync();  
             }
 
             return CreatedAtAction(nameof(GetCartItem), new { id = cartItem.ItemID }, cartItem);
