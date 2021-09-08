@@ -1,116 +1,67 @@
-﻿using System.Collections.Generic;
+﻿using Hubtel.eCommerce.Cart.Api.Models;
+using Hubtel.eCommerce.Cart.Api.Service;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Hubtel.eCommerce.Cart.Api.Models;
-using System;
 
 namespace Hubtel.eCommerce.Cart.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CartItemsController : ControllerBase
+    public class CartItemsController : Controller
     {
-        private readonly ShoppingCartContext _context;
+        private readonly ICartService _context;
 
-        public CartItemsController(ShoppingCartContext context)
+        public CartItemsController(ICartService context)
         {
             _context = context;
         }
 
-        // GET: api/CartItems
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<CartItem>>> GetCartItems()
-        {
-            return await _context.CartItems.ToListAsync();
-        }
-
-        // GET: api/CartItems/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<CartItem>> GetCartItem(int id)
-        {
-            var cartItem = await _context.CartItems.FindAsync(id);
-
-            if (cartItem == null)
-            {
-                return NotFound();
-            }
-
-            return cartItem;
-        }
-
-        // PUT: api/CartItems/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCartItem(int id, CartItem cartItem)
-        {
-            if (id != cartItem.ItemID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(cartItem).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CartItemExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-
-        // POST: api/CartItems
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
+        // POST api/CartItems
         [HttpPost]
-        public async Task<ActionResult<CartItem>> PostCartItem(CartItem cartItem)
+        public async Task<IActionResult> Post([FromBody] CartItem cartItem)
         {
-            try
-            {
-                _context.CartItems.Add(cartItem);
-                await _context.SaveChangesAsync();
-            }
-            catch(ArgumentException)
-            {
-                _context.Entry(cartItem).State = EntityState.Modified;
-                await _context.SaveChangesAsync();  
-            }
-
-            return CreatedAtAction(nameof(GetCartItem), new { id = cartItem.ItemID }, cartItem);
+            await _context.AddItemintoCartAsync(cartItem);
+            return Created($"CartItems", cartItem);
         }
 
-        // DELETE: api/CartItems/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult<CartItem>> DeleteCartItem(int id)
+        // GET: api/CartItems/GetCartItems
+        [HttpGet("GetCartItems/{phoneNumber}")]
+        public async Task<ActionResult<IEnumerable<CartItem>>> GetCartItems(string phoneNumber)
         {
-            var cartItem = await _context.CartItems.FindAsync(id);
-            if (cartItem == null)
-            {
-                return NotFound();
-            }
-
-            _context.CartItems.Remove(cartItem);
-            await _context.SaveChangesAsync();
-
-            return cartItem;
+            IList<CartItem> cartItems = await _context.GetCartItemsAsync(phoneNumber);
+            return Ok(cartItems);
         }
 
-        private bool CartItemExists(int id)
+        // PUT api/CartItems/ChangeItemQuantity/5/4
+        [HttpPut("ChangeItemQuantity/{cartItemId}/{quantity}")]
+        public async Task<IActionResult> ChangeItemQuantity(int cartItemId, int quantity)
         {
-            return _context.CartItems.Any(e => e.ItemID == id);
+            IList<CartItem> cartItems = await _context.ChangeCartItemQuantityAsync(cartItemId, quantity);
+            if (cartItems == null)
+                return NotFound("Item not found in the cart, please check the cartItemId");
+            return Ok(cartItems);
+        }
+
+        // DELETE: api/CartItems/ClearCart/1
+        [HttpDelete("ClearCart/{phoneNumber}")]
+        public async Task<IActionResult> ClearCart(string phoneNumber)
+        {
+            IList<CartItem> cartItems = await _context.ClearCartAsync(phoneNumber);
+            return Ok(cartItems);
+        }
+
+        // DELETE api/CartItems/DeleteItemFromCart/5
+        [HttpDelete("DeleteItemFromCart/{cartItemId}")]
+        public async Task<IActionResult> DeleteItemFromCart(int cartItemId)
+        {
+            IList<CartItem> cartItems = await _context.DeleteCartItemByIdAsync(cartItemId);
+            if (cartItems == null)
+                return NotFound("Item not found in the cart, please check the cartItemId");
+            return Ok(cartItems);
         }
     }
 }

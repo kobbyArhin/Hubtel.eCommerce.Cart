@@ -4,7 +4,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Hubtel.eCommerce.Cart.Api.Models;
+using Hubtel.eCommerce.Cart.Api.Models.EntityFrameWork;
+using Hubtel.eCommerce.Cart.Api.Service;
+using Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Repository;
+using Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Implementation;
 
 namespace Hubtel.eCommerce.Cart.Api
 {
@@ -21,9 +24,14 @@ namespace Hubtel.eCommerce.Cart.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<ShoppingCartContext>(opt =>
-                                               opt.UseInMemoryDatabase("CartList"));
+            services.AddDbContext<EnityFramWorkDbContext>(opt =>
+                                               opt.UseInMemoryDatabase("CartDB"));
             services.AddSwaggerGen();
+            services.AddScoped<ICartService, CartServices>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IRepository, EntityFrameworkRepository>();
+            services.AddScoped<IRepositoryReadOnly, EntityFrameworkRepositoryReadOnly>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
