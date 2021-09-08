@@ -129,3 +129,8 @@ C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\
 C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\obj\Debug\netcoreapp3.1\Hubtel.eCommerce.Cart.Api.csproj.CopyComplete
+C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\Debug\netcoreapp3.1\Microsoft.OpenApi.dll
+C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\bin\Debug\netcoreapp3.1\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\samwi\source\repos\Hubtel.eCommerce.Cart\Hubtel.eCommerce.Cart.Api\obj\Debug\netcoreapp3.1\Hubtel.eCommerce.Cart.Api.MvcApplicationPartsAssemblyInfo.cs

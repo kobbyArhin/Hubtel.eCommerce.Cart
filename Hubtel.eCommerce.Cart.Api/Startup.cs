@@ -4,7 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Hubtel.eCommerce.Cart.Api.Models;
+using Hubtel.eCommerce.Cart.Api.Service;
+using Microsoft.OpenApi.Models;
+using Hubtel.eCommerce.Cart.Api.Model.EntityFrameWork;
+using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository;
+using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Implementation;
 
 namespace Hubtel.eCommerce.Cart.Api
 {
@@ -21,8 +25,17 @@ namespace Hubtel.eCommerce.Cart.Api
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDbContext<ShoppingCartContext>(opt =>
-                                               opt.UseInMemoryDatabase("CartList"));
+            services.AddDbContext<EnityFramWorkDbContext>(opt =>
+                                               opt.UseInMemoryDatabase("CartDB"));
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hubtel.eCommerce.Cart", Version = "v1" });
+            });
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IRepository, EntityFrameworkRepository>();
+            services.AddScoped<IRepositoryReadOnly, EntityFrameworkRepositoryReadOnly>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -32,6 +45,12 @@ namespace Hubtel.eCommerce.Cart.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hubtel.eCommerce.Cart V1");
+            });
 
             app.UseHttpsRedirection();
 
