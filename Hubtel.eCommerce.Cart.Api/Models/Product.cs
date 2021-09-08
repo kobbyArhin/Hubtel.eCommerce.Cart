@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hubtel.eCommerce.Cart.Api.Models
+namespace Hubtel.eCommerce.Cart.Api.Model
 {
     public class Product
     {
         [Key]
         public int ProductId { get; set; }
-        //[Required(AllowEmptyStrings = false)]
+        [Required]
         public string ProductName { get; set; }
-        //[Required(AllowEmptyStrings=false)]
-        [Range(0, 9999.99)]
-        public decimal UnitPrice { get; set; }
+        [Required]
+        public double UnitPrice { get; set; }
     }
 }

@@ -4,10 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
-using Hubtel.eCommerce.Cart.Api.Models.EntityFrameWork;
 using Hubtel.eCommerce.Cart.Api.Service;
-using Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Repository;
-using Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Implementation;
+using Microsoft.OpenApi.Models;
+using Hubtel.eCommerce.Cart.Api.Model.EntityFrameWork;
+using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository;
+using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Implementation;
 
 namespace Hubtel.eCommerce.Cart.Api
 {
@@ -26,8 +27,11 @@ namespace Hubtel.eCommerce.Cart.Api
             services.AddControllers();
             services.AddDbContext<EnityFramWorkDbContext>(opt =>
                                                opt.UseInMemoryDatabase("CartDB"));
-            services.AddSwaggerGen();
-            services.AddScoped<ICartService, CartServices>();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hubtel.eCommerce.Cart", Version = "v1" });
+            });
+            services.AddScoped<ICartService, CartService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IRepository, EntityFrameworkRepository>();
             services.AddScoped<IRepositoryReadOnly, EntityFrameworkRepositoryReadOnly>();
@@ -45,7 +49,7 @@ namespace Hubtel.eCommerce.Cart.Api
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hubtel.eCommerce.Cart V1");
             });
 
             app.UseHttpsRedirection();

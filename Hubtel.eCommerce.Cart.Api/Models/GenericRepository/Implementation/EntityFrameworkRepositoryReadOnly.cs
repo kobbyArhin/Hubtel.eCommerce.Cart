@@ -1,14 +1,13 @@
-﻿using Hubtel.eCommerce.Cart.Api.Models.EntityFrameWork;
-using Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Repository;
+﻿using Hubtel.eCommerce.Cart.Api.Model.EntityFrameWork;
+using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using System.Text;
 
-namespace Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Implementation
+namespace Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Implementation
 {
     public class EntityFrameworkRepositoryReadOnly : IRepositoryReadOnly
     {
@@ -140,11 +139,10 @@ namespace Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Implementation
             return _contextReadOnly.Set<TEntity>().Find(id);
         }
 
-        public virtual Task<TEntity> GetByIdAsync<TEntity>(object id)
+        public virtual async Task<TEntity> GetByIdAsync<TEntity>(object id)
             where TEntity : class
         {
-            return _contextReadOnly.Set<TEntity>().FindAsync(id);
-            //return null;
+            return await _contextReadOnly.Set<TEntity>().FindAsync(id);
         }
 
         public virtual int GetCount<TEntity>(Expression<Func<TEntity, bool>> filter = null)

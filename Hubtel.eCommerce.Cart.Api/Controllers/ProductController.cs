@@ -1,25 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Hubtel.eCommerce.Cart.Api.Models;
-using Hubtel.eCommerce.Cart.Api.Models.EntityFrameWork;
 using Hubtel.eCommerce.Cart.Api.Service;
 
 namespace Hubtel.eCommerce.Cart.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class ProductsController : Controller
+    public class ProductController : Controller
     {
-        private readonly IProductService _context;
 
-        public ProductsController(IProductService context)
+        private readonly IProductService _iProductService;
+
+        public ProductController(IProductService iProductService)
         {
-            _context = context;
+            _iProductService = iProductService;
         }
 
         // GET: api/<controller>
@@ -28,14 +22,14 @@ namespace Hubtel.eCommerce.Cart.Api.Controllers
         {
             try
             {
-                var products = await _context.GetProductsAsync();
+                var products = await _iProductService.GetProductsAsync();
                 return Ok(products);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 return BadRequest(ex.Message);
             }
-
+            
         }
 
         [HttpGet("{productId}")]
@@ -43,7 +37,7 @@ namespace Hubtel.eCommerce.Cart.Api.Controllers
         {
             try
             {
-                var product = await _context.GetProductAsync(productId);
+                var product = await _iProductService.GetProductAsync(productId);
 
                 if (product == null)
                 {

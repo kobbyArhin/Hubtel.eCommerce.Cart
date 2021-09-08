@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Repository
+namespace Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository
 {
     public interface IRepository : IRepositoryReadOnly
     {

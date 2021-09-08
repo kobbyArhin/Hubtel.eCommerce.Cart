@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Hubtel.eCommerce.Cart.Api.Models.EntityFrameWork
+namespace Hubtel.eCommerce.Cart.Api.Model.EntityFrameWork
 {
     public partial class EnityFramWorkDbContext : DbContext
     {

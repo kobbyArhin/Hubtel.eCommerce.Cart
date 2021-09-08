@@ -1,6 +1,5 @@
-﻿using Hubtel.eCommerce.Cart.Api.Models;
-using Hubtel.eCommerce.Cart.Api.Models.GenericRepository.Repository;
-using System;
+﻿using Hubtel.eCommerce.Cart.Api.Model;
+using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
         /// <returns>return single product</returns>
         public async Task<Product> GetProductAsync(int productId)
         {
-            var product = await _iRepository.GetOneAsync<Product>(p => p.ProductId == productId);
+            var product = await _iRepository.GetOneAsync<Product>(p => p.ProductId == productId); 
             return product;
         }
     }
