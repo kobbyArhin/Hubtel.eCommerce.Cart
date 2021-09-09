@@ -11,5 +11,6 @@ namespace Hubtel.eCommerce.Cart.Api.Service
         Task<IList<CartItem>> ClearCartAsync(string phoneNumber);
         Task<IList<CartItem>> DeleteCartItemByIdAsync(int id);
         Task<IList<CartItem>> GetCartItemsAsync(string phoneNumber);
+        Task<IList<CartItem>> GetCartItemsAsync(int quantity);
     }
 }
