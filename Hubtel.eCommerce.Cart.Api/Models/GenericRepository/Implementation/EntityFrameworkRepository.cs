@@ -18,9 +18,6 @@ namespace Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Implementation
             where TEntity : class
         {
 
-            //entity.CreatedDate = DateTime.UtcNow;
-            //entity.CreatedBy = createdBy;
-            //_context.Set<TEntity>().Add(entity);
             try
             {
                 _context.Set<TEntity>().Add(entity);
@@ -34,8 +31,6 @@ namespace Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Implementation
         public virtual void Update<TEntity>(TEntity entity, string modifiedBy = null)
             where TEntity : class
         {
-            //entity.ModifiedDate = DateTime.UtcNow;
-            //entity.ModifiedBy = modifiedBy;
             _context.Set<TEntity>().Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
         }

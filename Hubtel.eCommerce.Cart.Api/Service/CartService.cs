@@ -1,5 +1,6 @@
 ﻿using Hubtel.eCommerce.Cart.Api.Model;
 using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,20 +18,30 @@ namespace Hubtel.eCommerce.Cart.Api.Service
         public async Task<CartItem> AddItemintoCartAsync(CartItem cartItem)
         {
             IEnumerable<CartItem> cartItems = await _iRepository.GetAsync<CartItem>(c => c.PhoneNumber == cartItem.PhoneNumber);
-            
-            //this is for primeray key generate becuase the actuall database is not not connected, once we have actuall db connected the following live of code will be remove
-            if (cartItems.Any())
+            try
             {
-                cartItem.CartItemId = cartItems.Last().CartItemId + 1;
+                IEnumerable<CartItem> existingItem = await _iRepository.GetAsync<CartItem>(c=>c.Product.ProductId==cartItem.Product.ProductId);
+                cartItem.Quantity += existingItem.Last().Quantity;
+                cartItem.CartItemId = existingItem.Last().CartItemId;
+                _iRepository.Update<CartItem>(cartItem);
+                await _iRepository.SaveAsync();
+                return cartItem;
             }
-            else
+            catch (InvalidOperationException)
             {
-                cartItem.CartItemId = 1;
-            }
+                if (cartItems.Any())
+                {
+                    cartItem.CartItemId = cartItems.Last().CartItemId + 1;
+                }
+                else
+                {
+                    cartItem.CartItemId = 1;
+                }
 
-            _iRepository.Create<CartItem>(cartItem);
-            await _iRepository.SaveAsync();
-            return cartItem;
+                _iRepository.Create<CartItem>(cartItem);
+                await _iRepository.SaveAsync();
+                return cartItem;
+            }
         }
 
         public async Task<IList<CartItem>> GetCartItemsAsync(string phoneNumber)
@@ -40,20 +51,14 @@ namespace Hubtel.eCommerce.Cart.Api.Service
             return cartItems.ToList();
         }
 
-        public async Task<IList<CartItem>> ClearCartAsync(string phoneNumber)
+        public async Task<IList<CartItem>> GetCartItemsAsync(int quantity)
         {
-            var cartItems = await _iRepository.GetAsync<CartItem>(c => c.PhoneNumber == phoneNumber);
-
-            foreach (var cartItem in cartItems)
-            {
-                _iRepository.Delete<CartItem>(cartItem);
-            }
-            await _iRepository.SaveAsync();
-
-            return await GetCartItemsAsync(phoneNumber);
+            var cartItems = await _iRepository.GetAsync<CartItem>(c => c.Quantity == quantity);
+            cartItems = PopulateProductIntoCartItem(cartItems.ToList());
+            return cartItems.ToList();
         }
 
-        public async Task<IList<CartItem>> DeleteCartItemByIdAsync(int id)
+        public async Task<IList<CartItem>> RemoveCartItemByIdAsync(int id)
         {
             var cartItem = await _iRepository.GetByIdAsync<CartItem>(id);
             if (cartItem != null)
