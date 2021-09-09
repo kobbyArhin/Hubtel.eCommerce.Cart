@@ -1,5 +1,6 @@
 ﻿using Hubtel.eCommerce.Cart.Api.Model;
 using Hubtel.eCommerce.Cart.Api.Model.GenericRepository.Repository;
+using Hubtel.eCommerce.Cart.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
 
         public async Task<CartItem> AddItemintoCartAsync(CartItem cartItem)
         {
-            IEnumerable<CartItem> cartItems = await _iRepository.GetAsync<CartItem>(c => c.PhoneNumber == cartItem.PhoneNumber);
+            IEnumerable<CartItem> cartItems = await _iRepository.GetAsync<CartItem>(c => c.Customer.PhoneNumber == cartItem.Customer.PhoneNumber);
             try
             {
                 IEnumerable<CartItem> existingItem = await _iRepository.GetAsync<CartItem>(c=>c.Product.ProductId==cartItem.Product.ProductId);
@@ -46,7 +47,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
 
         public async Task<IList<CartItem>> GetCartItemsAsync(string phoneNumber)
         {
-            var cartItems = await _iRepository.GetAsync<CartItem>(c => c.PhoneNumber == phoneNumber);
+            var cartItems = await _iRepository.GetAsync<CartItem>(c => c.Customer.PhoneNumber == phoneNumber);
             cartItems = PopulateProductIntoCartItem(cartItems.ToList());
             return cartItems.ToList();
         }
@@ -67,7 +68,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
                 await _iRepository.SaveAsync();
             }
 
-            return await GetCartItemsAsync(cartItem.PhoneNumber);
+            return await GetCartItemsAsync(cartItem.Customer.PhoneNumber);
         }
 
         public async Task<IList<CartItem>> ChangeCartItemQuantityAsync(int id, int quantity)
@@ -81,7 +82,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
 
             _iRepository.Update<CartItem>(cartItem);
             await _iRepository.SaveAsync();
-            return await GetCartItemsAsync(cartItem.PhoneNumber);
+            return await GetCartItemsAsync(cartItem.Customer.PhoneNumber);
         }
 
         #region Private Helper
@@ -93,6 +94,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
             foreach (var cartItem in cartItems)
             {
                 cartItem.Product = _iRepository.GetById<Product>(cartItem.ProductId);
+                cartItem.Customer = _iRepository.GetById<Customer>(cartItem.CustomerId);
             }
 
             return cartItems;
