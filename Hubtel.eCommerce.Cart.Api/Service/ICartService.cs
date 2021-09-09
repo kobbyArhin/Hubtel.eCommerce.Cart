@@ -8,8 +8,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
     {
         Task<CartItem> AddItemintoCartAsync(CartItem cartItem);
         Task<IList<CartItem>> ChangeCartItemQuantityAsync(int id, int quantity);
-        Task<IList<CartItem>> ClearCartAsync(string phoneNumber);
-        Task<IList<CartItem>> DeleteCartItemByIdAsync(int id);
+        Task<IList<CartItem>> RemoveCartItemByIdAsync(int id);
         Task<IList<CartItem>> GetCartItemsAsync(string phoneNumber);
         Task<IList<CartItem>> GetCartItemsAsync(int quantity);
     }

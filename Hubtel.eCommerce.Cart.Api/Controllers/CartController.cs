@@ -29,17 +29,17 @@ namespace Hubtel.eCommerce.Cart.Api.Controllers
         {
             IList<CartItem> cartItems = await _iCartService.ChangeCartItemQuantityAsync(cartItemId, quantity);
             if (cartItems == null)
-                return NotFound("Item not found in the cart, please check the cartItemId");
+                return NotFound("Item not found in Cart");
             return Ok(cartItems);
         }
 
-        // DELETE api/Cart/DeleteItemFromCart/5
-        [HttpDelete("DeleteItemFromCart/{cartItemId}")]
-        public async Task<IActionResult> DeleteItemFromCart(int cartItemId)
+        // DELETE api/Cart/RemoveItemFromCart/5
+        [HttpDelete("RemoveItemFromCart/{cartItemId}")]
+        public async Task<IActionResult> RemoveItemFromCart(int cartItemId)
         {
-            IList<CartItem> cartItems = await _iCartService.DeleteCartItemByIdAsync(cartItemId);
+            IList<CartItem> cartItems = await _iCartService.RemoveCartItemByIdAsync(cartItemId);
             if (cartItems == null)
-                return NotFound("Item not found in the cart, please check the cartItemId");
+                return NotFound("Item not found in Cart");
             return Ok(cartItems);
         }
 
@@ -58,13 +58,5 @@ namespace Hubtel.eCommerce.Cart.Api.Controllers
             IList<CartItem> cartItems = await _iCartService.GetCartItemsAsync(quantity);
             return Ok(cartItems);
         }
-
-        /*// DELETE api/Cart/ClearCart/1
-        [HttpDelete("ClearCart/{phoneNumber}")]
-        public async Task<IActionResult> ClearCart(string phoneNumber)
-        {
-            IList<CartItem> cartItems = await _iCartService.ClearCartAsync(phoneNumber);
-            return Ok(cartItems);
-        }*/
     }
 }

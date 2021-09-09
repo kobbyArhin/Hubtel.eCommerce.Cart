@@ -18,9 +18,6 @@ namespace Hubtel.eCommerce.Cart.Api.Service
         public async Task<CartItem> AddItemintoCartAsync(CartItem cartItem)
         {
             IEnumerable<CartItem> cartItems = await _iRepository.GetAsync<CartItem>(c => c.PhoneNumber == cartItem.PhoneNumber);
-            
-            //this is for primeray key generate becuase the actuall database is not not connected, once we have actuall db connected the following live of code will be remove
-            
             try
             {
                 IEnumerable<CartItem> existingItem = await _iRepository.GetAsync<CartItem>(c=>c.Product.ProductId==cartItem.Product.ProductId);
@@ -61,20 +58,7 @@ namespace Hubtel.eCommerce.Cart.Api.Service
             return cartItems.ToList();
         }
 
-        public async Task<IList<CartItem>> ClearCartAsync(string phoneNumber)
-        {
-            var cartItems = await _iRepository.GetAsync<CartItem>(c => c.PhoneNumber == phoneNumber);
-
-            foreach (var cartItem in cartItems)
-            {
-                _iRepository.Delete<CartItem>(cartItem);
-            }
-            await _iRepository.SaveAsync();
-
-            return await GetCartItemsAsync(phoneNumber);
-        }
-
-        public async Task<IList<CartItem>> DeleteCartItemByIdAsync(int id)
+        public async Task<IList<CartItem>> RemoveCartItemByIdAsync(int id)
         {
             var cartItem = await _iRepository.GetByIdAsync<CartItem>(id);
             if (cartItem != null)
