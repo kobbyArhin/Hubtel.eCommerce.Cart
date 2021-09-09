@@ -32,6 +32,7 @@ namespace Hubtel.eCommerce.Cart.Api
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hubtel.eCommerce.Cart", Version = "v1" });
             });
             services.AddScoped<ICartService, CartService>();
+            services.AddScoped<ICustomerService, CustomerService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IRepository, EntityFrameworkRepository>();
             services.AddScoped<IRepositoryReadOnly, EntityFrameworkRepositoryReadOnly>();
